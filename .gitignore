@@ -1,3 +1,4 @@
+# uv lock file
 uv.lock
 .env
 .env.*
