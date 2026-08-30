@@ -1,5 +1,7 @@
 import logging
 import textwrap
+import webbrowser
+from urllib.parse import quote
 
 from dotenv import load_dotenv
 from livekit.agents import (
@@ -7,12 +9,15 @@ from livekit.agents import (
     AgentServer,
     AgentSession,
     JobContext,
+    RunContext,
     TurnHandlingOptions,
     cli,
+    function_tool,
     inference,
     room_io,
 )
 from livekit.plugins import ai_coustics
+from playwright.async_api import async_playwright
 
 logger = logging.getLogger("agent")
 
@@ -20,6 +25,107 @@ load_dotenv(".env.local")
 
 
 class Assistant(Agent):
+    @function_tool()
+    async def open_browser(self, context: RunContext) -> str:
+        """Open the default web browser."""
+
+        logger.info("Opening web browser")
+
+        webbrowser.open("https://www.google.com")
+
+        return "The web browser is open."
+
+    @function_tool()
+    async def open_youtube(self, context: RunContext) -> str:
+        """Open YouTube in the default web browser."""
+
+        logger.info("Opening YouTube")
+
+        webbrowser.open("https://www.youtube.com")
+
+        return "YouTube is open."
+
+    @function_tool()
+    async def search_web(
+        self,
+        context: RunContext,
+        query: str,
+    ) -> str:
+        """Search Google for information requested by the user.
+
+        Args:
+            query: The information the user wants to search for.
+        """
+
+        logger.info("Searching Google for: %s", query)
+
+        url = f"https://www.google.com/search?q={quote(query)}"
+        webbrowser.open(url)
+
+        return f"I searched Google for {query}."
+
+    @function_tool()
+    async def search_youtube(
+        self,
+        context: RunContext,
+        query: str,
+    ) -> str:
+        """Search YouTube for a video, song, topic, or other content.
+
+        Args:
+            query: What the user wants to search for on YouTube.
+        """
+
+        logger.info("Searching YouTube for: %s", query)
+
+        url = f"https://www.youtube.com/results?search_query={quote(query)}"
+        webbrowser.open(url)
+
+        return f"I searched YouTube for {query}."
+
+    @function_tool()
+    async def play_youtube(
+        self,
+        context: RunContext,
+        query: str,
+    ) -> str:
+        """Search YouTube and open the first video result.
+
+        Args:
+            query: The song, video, artist, or topic to play.
+        """
+
+        logger.info("Playing YouTube search: %s", query)
+
+        search_url = "https://www.youtube.com/results?search_query=" + quote(query)
+
+        try:
+            playwright = await async_playwright().start()
+
+            browser = await playwright.chromium.launch(headless=False)
+
+            page = await browser.new_page()
+
+            await page.goto(
+                search_url,
+                wait_until="domcontentloaded",
+                timeout=30000,
+            )
+
+            await page.wait_for_timeout(3000)
+
+            video = page.locator("ytd-video-renderer a#thumbnail").first
+
+            await video.click()
+
+            await page.wait_for_timeout(3000)
+
+            return f"Playing the first YouTube result for {query}."
+
+        except Exception as e:
+            logger.exception("YouTube playback failed: %s", e)
+            return "I could not start the YouTube video."
+
     def __init__(self) -> None:
         super().__init__(
             # A Large Language Model (LLM) is your agent's brain, processing user input and generating a response
