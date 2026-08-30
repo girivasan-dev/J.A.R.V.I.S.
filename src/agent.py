@@ -3,6 +3,7 @@ import textwrap
 import webbrowser
 from urllib.parse import quote
 
+import httpx
 from dotenv import load_dotenv
 from livekit.agents import (
     Agent,
@@ -82,6 +83,107 @@ class Assistant(Agent):
         webbrowser.open(url)
 
         return f"I searched YouTube for {query}."
+
+    @function_tool()
+    async def get_weather(
+        self,
+        context: RunContext,
+        location: str,
+    ) -> str:
+        """Get the current weather for a city or location.
+
+        Args:
+            location: The city or location to check the weather for.
+        """
+
+        logger.info("Getting weather for: %s", location)
+
+        async with httpx.AsyncClient() as client:
+            # Find the latitude and longitude of the location
+            geo_response = await client.get(
+                "https://geocoding-api.open-meteo.com/v1/search",
+                params={
+                    "name": location,
+                    "count": 1,
+                    "language": "en",
+                    "format": "json",
+                },
+            )
+            geo_response.raise_for_status()
+            geo_data = geo_response.json()
+
+            if not geo_data.get("results"):
+                return f"I couldn't find the location {location}."
+
+            place = geo_data["results"][0]
+            latitude = place["latitude"]
+            longitude = place["longitude"]
+            city = place["name"]
+
+            # Get current weather
+            weather_response = await client.get(
+                "https://api.open-meteo.com/v1/forecast",
+                params={
+                    "latitude": latitude,
+                    "longitude": longitude,
+                    "current": (
+                        "temperature_2m,"
+                        "relative_humidity_2m,"
+                        "weather_code,"
+                        "wind_speed_10m"
+                    ),
+                    "timezone": "auto",
+                },
+            )
+            weather_response.raise_for_status()
+            weather_data = weather_response.json()
+
+            current = weather_data["current"]
+
+            temperature = current["temperature_2m"]
+            humidity = current["relative_humidity_2m"]
+            wind_speed = current["wind_speed_10m"]
+            weather_code = current["weather_code"]
+
+            weather_description = self._weather_description(weather_code)
+
+            return (
+                f"The current weather in {city} is "
+                f"{weather_description}, "
+                f"{temperature} degrees Celsius, "
+                f"humidity {humidity} percent, "
+                f"with wind speed of {wind_speed} kilometers per hour."
+            )
+
+    @staticmethod
+    def _weather_description(code: int) -> str:
+        """Convert an Open-Meteo weather code into a spoken description."""
+
+        descriptions = {
+            0: "clear sky",
+            1: "mainly clear",
+            2: "partly cloudy",
+            3: "overcast",
+            45: "foggy",
+            48: "foggy",
+            51: "light drizzle",
+            53: "moderate drizzle",
+            55: "dense drizzle",
+            61: "light rain",
+            63: "moderate rain",
+            65: "heavy rain",
+            71: "light snow",
+            73: "moderate snow",
+            75: "heavy snow",
+            80: "light rain showers",
+            81: "moderate rain showers",
+            82: "heavy rain showers",
+            95: "thunderstorm",
+            96: "thunderstorm with light hail",
+            99: "thunderstorm with heavy hail",
+        }
+
+        return descriptions.get(code, "unknown weather conditions")
 
     @function_tool()
     async def play_youtube(
