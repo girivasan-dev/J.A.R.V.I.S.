@@ -1,0 +1,597 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap");
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #02090b;
+  color: #d9ffff;
+  font-family: "Orbitron", monospace;
+  overflow-x: hidden;
+}
+
+.jarvis {
+  min-height: 100vh;
+  position: relative;
+  background:
+    radial-gradient(circle at center, rgba(0, 180, 190, 0.12), transparent 35%),
+    linear-gradient(rgba(0, 20, 24, 0.9), rgba(0, 5, 8, 0.98));
+}
+
+/* SCANLINES */
+
+.jarvis::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 255, 255, 0.025) 4px
+  );
+}
+
+
+/* TOP NAVIGATION */
+
+.topbar {
+  width: 76%;
+  height: 64px;
+  margin: 14px auto 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 38px;
+
+  border: 1px solid rgba(0, 220, 230, 0.25);
+  border-radius: 40px;
+
+  background: rgba(2, 25, 30, 0.65);
+
+  box-shadow:
+    0 0 25px rgba(0, 200, 220, 0.08),
+    inset 0 0 20px rgba(0, 220, 240, 0.03);
+
+  backdrop-filter: blur(10px);
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: #00eaff;
+
+  text-shadow:
+    0 0 8px #00eaff,
+    0 0 20px rgba(0, 234, 255, 0.6);
+}
+
+.topbar nav {
+  display: flex;
+  gap: 35px;
+}
+
+.topbar nav span {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #647b80;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.topbar nav span:hover {
+  color: #00eaff;
+  text-shadow: 0 0 10px #00eaff;
+}
+
+
+/* DASHBOARD */
+
+.dashboard {
+  width: 94%;
+  max-width: 1600px;
+  min-height: calc(100vh - 90px);
+
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: 270px 1fr 300px;
+  gap: 35px;
+
+  align-items: center;
+}
+
+
+/* PANELS */
+
+.panel {
+  position: relative;
+
+  border-top: 1px solid rgba(0, 220, 230, 0.35);
+  border-bottom: 1px solid rgba(0, 220, 230, 0.12);
+
+  padding: 20px;
+
+  background: rgba(0, 30, 35, 0.18);
+}
+
+.panel h3 {
+  margin: 0 0 20px;
+
+  font-size: 11px;
+  letter-spacing: 3px;
+
+  color: #6f8589;
+}
+
+
+/* LEFT PANEL */
+
+.left-panel,
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+
+/* DIAGNOSTICS */
+
+.diagnostics {
+  display: flex;
+  justify-content: space-between;
+}
+
+.diagnostics div {
+  width: 65px;
+  height: 65px;
+
+  border: 2px solid rgba(0, 220, 230, 0.25);
+  border-radius: 50%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.diagnostics strong {
+  font-size: 13px;
+  color: #e8ffff;
+}
+
+.diagnostics small {
+  margin-top: 4px;
+  font-size: 7px;
+  color: #71878b;
+}
+
+.network {
+  margin-top: 20px;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #00dce8;
+}
+
+
+/* ACTIVITY */
+
+.status-button {
+  text-align: center;
+
+  padding: 11px;
+
+  border: 1px solid rgba(0, 220, 230, 0.3);
+
+  color: #00eaff;
+
+  font-size: 11px;
+  letter-spacing: 3px;
+
+  margin-bottom: 15px;
+
+  box-shadow: 0 0 15px rgba(0, 220, 230, 0.05);
+}
+
+.activity p,
+.system-log p {
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #526b70;
+  margin: 10px 0;
+}
+
+
+/* SYSTEM STATUS */
+
+.system-status p {
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #617a7e;
+}
+
+.system-status p::first-letter {
+  color: #00eaff;
+}
+
+
+/* CENTER */
+
+.core-section {
+  min-height: 700px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* CORE */
+
+.core {
+  width: 430px;
+  height: 430px;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+}
+
+
+/* RINGS */
+
+.ring {
+  position: absolute;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(100, 220, 225, 0.35);
+
+  animation: rotate 12s linear infinite;
+}
+
+.ring-one {
+  width: 360px;
+  height: 360px;
+}
+
+.ring-two {
+  width: 290px;
+  height: 400px;
+
+  border-color: rgba(0, 230, 240, 0.3);
+
+  transform: rotate(45deg);
+  animation-duration: 9s;
+}
+
+.ring-three {
+  width: 400px;
+  height: 290px;
+
+  border-color: rgba(0, 230, 240, 0.2);
+
+  transform: rotate(-45deg);
+  animation-duration: 14s;
+}
+
+
+/* CORE CIRCLE */
+
+.core-circle {
+  width: 105px;
+  height: 105px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 50px;
+  font-weight: 700;
+
+  color: #dfffff;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(210, 255, 255, 0.95),
+      rgba(60, 180, 190, 0.5) 45%,
+      rgba(0, 80, 90, 0.1) 70%
+    );
+
+  box-shadow:
+    0 0 25px rgba(0, 240, 255, 0.5),
+    0 0 70px rgba(0, 180, 200, 0.25);
+
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+
+/* GREETING */
+
+.greeting {
+  text-align: center;
+
+  margin-top: -45px;
+
+  padding: 25px 60px;
+
+  border: 1px solid rgba(0, 220, 230, 0.18);
+
+  background: rgba(0, 30, 35, 0.25);
+
+  box-shadow: 0 0 30px rgba(0, 220, 230, 0.05);
+}
+
+.greeting h1 {
+  margin: 0;
+
+  font-size: 24px;
+  letter-spacing: 3px;
+
+  color: #e4ffff;
+
+  text-shadow: 0 0 15px rgba(0, 230, 240, 0.3);
+}
+
+.greeting p {
+  margin: 14px 0;
+
+  font-size: 9px;
+  letter-spacing: 4px;
+
+  color: #657d81;
+}
+
+.jarvis-name {
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: #00dce8;
+}
+
+
+/* COMMAND */
+
+.command-box {
+  width: 90%;
+
+  margin-top: 25px;
+
+  display: flex;
+
+  border: 1px solid rgba(0, 220, 230, 0.35);
+
+  background: rgba(0, 20, 25, 0.7);
+}
+
+.command-box input {
+  flex: 1;
+
+  padding: 14px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #dfffff;
+
+  font-family: "Orbitron", monospace;
+  font-size: 10px;
+}
+
+.command-box input::placeholder {
+  color: #486266;
+}
+
+.command-box button {
+  padding: 0 20px;
+
+  border: none;
+
+  background: rgba(0, 220, 230, 0.12);
+
+  color: #00eaff;
+
+  font-family: "Orbitron", monospace;
+  font-size: 9px;
+
+  cursor: pointer;
+}
+
+.command-box button:hover {
+  background: rgba(0, 220, 230, 0.25);
+}
+
+
+/* LOCATION */
+
+.location h2 {
+  margin: 5px 0;
+
+  font-size: 22px;
+
+  letter-spacing: 4px;
+
+  color: #e6ffff;
+}
+
+.location p {
+  margin: 0;
+
+  font-size: 9px;
+
+  color: #60787c;
+}
+
+.coordinates {
+  margin-top: 25px;
+
+  font-size: 8px;
+
+  line-height: 2;
+
+  color: #5e777b;
+}
+
+
+/* CLOCK */
+
+.time {
+  font-size: 45px;
+
+  font-weight: 600;
+
+  letter-spacing: 3px;
+
+  color: #eaffff;
+
+  text-shadow: 0 0 15px rgba(0, 230, 240, 0.3);
+}
+
+.date {
+  margin-top: 8px;
+
+  font-size: 9px;
+
+  letter-spacing: 4px;
+
+  color: #61797d;
+}
+
+.temperature {
+  margin-top: 25px;
+
+  font-size: 25px;
+
+  color: #dfffff;
+}
+
+.clock small {
+  font-size: 7px;
+
+  letter-spacing: 2px;
+
+  color: #597174;
+}
+
+
+/* SYSTEM LOG */
+
+.system-log {
+  min-height: 190px;
+}
+
+.system-log p:nth-child(3) {
+  color: #e0c900;
+}
+
+.system-log p:nth-child(4) {
+  color: #00eaff;
+}
+
+
+/* ANIMATIONS */
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+
+/* MOBILE */
+
+@media (max-width: 1100px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+    padding: 40px 20px;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%;
+  }
+
+  .core-section {
+    order: -1;
+  }
+
+  .topbar {
+    width: 92%;
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 0 20px;
+  }
+
+  .topbar nav {
+    display: none;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .core {
+    width: 320px;
+    height: 320px;
+  }
+
+  .ring-one {
+    width: 280px;
+    height: 280px;
+  }
+
+  .ring-two {
+    width: 230px;
+    height: 310px;
+  }
+
+  .ring-three {
+    width: 310px;
+    height: 230px;
+  }
+
+  .greeting {
+    padding: 20px;
+  }
+
+  .greeting h1 {
+    font-size: 17px;
+  }
+}

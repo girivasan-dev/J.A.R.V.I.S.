@@ -1,35 +1,18 @@
-# uv lock file
-uv.lock
+# Environment / secrets
 .env
 .env.*
 !.env.example
-.DS_Store
-__pycache__
-.idea
-KMS
-.venv
-.vscode
-*.egg-info
-.pytest_cache
-.ruff_cache
+backend/.env
 
-# Claude Code
-.claude/settings.local.json
-.claude/worktrees/
+# Python
+venv/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
 
-# OpenAI Codex
-.codex/config.local.toml
+# Node
+node_modules/
 
-# Gemini CLI
-.gemini/history/
-.gemini/tmp/
-.gemini/google_accounts.json
-.gemini/installation_id
-.gemini/oauth_creds.json
-
-# Cursor
-.cursor/chat/
-.cursor/rules/*.local.mdc
-
-# GitHub CLI
-.github/personal-instructions.md
+# Local backup
+.git-backup-jarvis/
